@@ -1,0 +1,94 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Alexandre Carbenay
+      context: production
+      changes:
+        - createTable:
+            tableName: parent
+            columns:
+            - column:
+                name: id
+                type: bigint
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: something
+                type: varchar(50)
+                constraints:
+                  nullable: false
+        - createTable:
+            tableName: child
+            columns:
+            - column:
+                name: id
+                type: bigint
+                autoIncrement: true
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: value
+                type: varchar(50)
+                constraints:
+                  nullable: false
+            - column:
+                name: parent
+                type: bigint
+                constraints:
+                  nullable: false
+                  references: parent(id)
+                  foreignKeyName: FK_child_parent
+  
+  - changeSet:
+      id: 1-testing
+      author: Alexandre Carbenay
+      context: testing
+      changes:
+        - insert:
+            tableName: parent
+            columns:
+              - column:
+                  name: something
+                  value: parent1
+        - insert:
+            tableName: parent
+            columns:
+              - column:
+                  name: something
+                  value: parent2
+        - insert:
+            tableName: parent
+            columns:
+              - column:
+                  name: something
+                  value: parent3
+        - insert:
+            tableName: child
+            columns:
+              - column:
+                  name: value
+                  value: child1
+              - column:
+                  name: parent
+                  valueComputed: select id from parent where something = 'parent1'
+        - insert:
+            tableName: child
+            columns:
+              - column:
+                  name: value
+                  value: child2
+              - column:
+                  name: parent
+                  valueComputed: select id from parent where something = 'parent2'
+        - insert:
+            tableName: child
+            columns:
+              - column:
+                  name: value
+                  value: child3
+              - column:
+                  name: parent
+                  valueComputed: select id from parent where something = 'parent3'
