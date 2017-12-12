@@ -24,7 +24,7 @@ public class Child {
     private Long   id;
     @Column
     private String value;
-    @OneToOne
+    @OneToOne(optional = false)
     @JoinColumn(name = "parent")
     private Parent parent;
 
