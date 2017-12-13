@@ -2,6 +2,7 @@ package com.example.demojpaonetoone.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.example.demojpaonetoone.model.Child;
 import com.example.demojpaonetoone.model.Parent;
+import com.example.demojpaonetoone.model.QChild;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -25,6 +27,13 @@ public class ChildJpaRepositoryTest {
         Collection<Child> children = repository.findAll();
         assertThat(children).isNotEmpty().hasSize(3);
         assertThat(children).containsExactlyInAnyOrder(child1(), child2(), child3());
+    }
+
+    @Test
+    public void findAllByPredicate() {
+        Collection<Child> children = repository.findAll(QChild.child.value.in(Arrays.asList("child1", "child2")));
+        assertThat(children).isNotEmpty().hasSize(2);
+        assertThat(children).containsExactlyInAnyOrder(child1(), child2());
     }
 
     @Test
